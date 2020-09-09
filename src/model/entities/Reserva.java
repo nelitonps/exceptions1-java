@@ -4,9 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import model.exceptions.DomainException;
+
 public class Reserva {
 
-	private Integer numeroReserva;
+	private Integer numeroQuarto;
 	private Date checkIn;
 	private Date checkOut;
 	
@@ -15,18 +17,22 @@ public class Reserva {
 	public Reserva() {
 	}
 
-	public Reserva(Integer numeroReserva, Date checkIn, Date checkOut) {
-		this.numeroReserva = numeroReserva;
+	public Reserva(Integer numeroQuarto, Date checkIn, Date checkOut) {
+		/*if (!checkOut.after(checkIn)) {
+			throw new DomainException("A data de check-out deve ser posterior à data de check-in");
+		}*/
+		atualizaData(checkIn, checkOut);
+		this.numeroQuarto = numeroQuarto;
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
 	}
 
-	public Integer getNumeroReserva() {
-		return numeroReserva;
+	public Integer getNumeroQuarto() {
+		return numeroQuarto;
 	}
 
-	public void setNumeroReserva(Integer numeroReserva) {
-		this.numeroReserva = numeroReserva;
+	public void setNumeroQuarto(Integer numeroQuarto) {
+		this.numeroQuarto = numeroQuarto;
 	}
 
 	public Date getCheckIn() {
@@ -43,14 +49,21 @@ public class Reserva {
 	}
 	
 	public void atualizaData(Date checkIn, Date checkOut) {
+		Date now = new Date();
+		if (checkIn.before(now) || checkOut.before(now)) {
+			throw new DomainException("As datas de reserva para atualização devem ser datas futuras");
+		}
+		if (!checkOut.after(checkIn)) {
+			throw new DomainException("A data de check-out deve ser posterior à data de check-in");
+		}
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
 	}
 	
 	@Override
 	public String toString() {
-		return "Reserva "
-				+ numeroReserva
+		return "Quarto "
+				+ numeroQuarto
 				+ ", Check-In: "
 				+ sdf.format(checkIn)
 				+ ", Check-Out: "
